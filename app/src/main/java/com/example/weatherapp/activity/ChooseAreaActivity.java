@@ -163,7 +163,6 @@ public class ChooseAreaActivity extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(ChooseAreaActivity.this, "Test", Toast.LENGTH_SHORT).show();
                             closeProgressDialog();
                             if ("province".equals(type)) {
                                 queryProvinces();

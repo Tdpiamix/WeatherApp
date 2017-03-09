@@ -3,6 +3,8 @@ package com.example.weatherapp.util;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.os.Handler;
+import android.os.Message;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -33,6 +35,8 @@ import static android.R.attr.data;
  */
 
 public class Utility {
+
+    private static final int QUERY_SUCCEED = 1;
 
     public synchronized static boolean handleProvincesResponse(WeatherDB weatherDB, String response) {
         String[] allProvinces = response.split(",");
@@ -85,7 +89,29 @@ public class Utility {
         return false;
     }
 
-    public static void handleWeatherResponse(Context context, String response) {
+    public static void handleAQIResponse(Context context, String response, Handler mHandler) {
+        try {
+            SharedPreferences.Editor editor = PreferenceManager
+                    .getDefaultSharedPreferences(context).edit();
+            JSONObject jsonObject = new JSONObject(response);
+            JSONArray jsonArray = jsonObject.getJSONArray("HeWeather5");
+            JSONObject weatherInfo = jsonArray.getJSONObject(0);
+            JSONObject aqiInfo = weatherInfo.getJSONObject("aqi").getJSONObject("city");
+
+            editor.putString("co", aqiInfo.getString("co"));
+            editor.putString("no2", aqiInfo.getString("no2"));
+            editor.putString("o3", aqiInfo.getString("o3"));
+            editor.putString("pm10", aqiInfo.getString("pm10"));
+            editor.putString("pm25", aqiInfo.getString("pm25"));
+
+            editor.putString("so2", aqiInfo.getString("so2"));
+            editor.commit();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void handleWeatherResponse(Context context, String response, Handler mHandler) {
         try {
             SharedPreferences.Editor editor = PreferenceManager
                     .getDefaultSharedPreferences(context).edit();
@@ -97,7 +123,12 @@ public class Utility {
             JSONObject weatherInfo = jsonArray.getJSONObject(0);
             JSONObject aqiInfo = weatherInfo.getJSONObject("aqi").getJSONObject("city");
             editor.putString("aqi", aqiInfo.getString("aqi"));
+
+
+
+
             editor.putString("qlty", aqiInfo.getString("qlty"));
+
             editor.putString("city_name", weatherInfo.getJSONObject("basic").getString("city"));
             editor.putString("city_id", weatherInfo.getJSONObject("basic").getString("id"));
             editor.putString("publish_time", weatherInfo.getJSONObject("basic").getJSONObject("update").getString("loc"));
@@ -118,7 +149,7 @@ public class Utility {
 
 
             JSONArray hourlyInfo = weatherInfo.getJSONArray("hourly_forecast");
-            for (int i = 0; i < 3; i++) {
+            for (int i = 0; i < 1; i++) {
                 editor.putString(i + "_code", hourlyInfo.getJSONObject(i).getJSONObject("cond").getString("code"));
                 String date = hourlyInfo.getJSONObject(i).getString("date");
                 String[] array = date.split(" ");
@@ -136,6 +167,11 @@ public class Utility {
             editor.putBoolean("city_selected", true);
 
             editor.commit();
+
+            Message message = new Message();
+            message.what = QUERY_SUCCEED;
+            mHandler.sendMessage(message);
+
         } catch (JSONException e) {
             e.printStackTrace();
         }

@@ -1,11 +1,19 @@
 package com.example.weatherapp.activity;
 
+import android.app.Service;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.Message;
+import android.os.Messenger;
 import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
@@ -22,6 +30,8 @@ import com.example.weatherapp.R;
 import com.example.weatherapp.service.AutoUpdateService;
 import com.example.weatherapp.util.HttpCallbackListener;
 import com.example.weatherapp.util.HttpUtil;
+import com.example.weatherapp.util.MyApplication;
+import com.example.weatherapp.util.QueryUtility;
 import com.example.weatherapp.util.Utility;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
@@ -38,7 +48,11 @@ import java.net.URLEncoder;
 public class WeatherActivity extends AppCompatActivity implements View.OnClickListener {
 
     public static final String APIKey = "d4ff76f262dd43c09e327baad5f95fbd";
-    private RelativeLayout selectCity;
+    private static final int GET_INFO_FAIL = 0;
+    private static final int QUERY_SUCCEED = 1;
+    private RelativeLayout selectCity,
+            btnAQI;
+            ;
     private TextView tvCityName,
             tvPublishTime,
             tvNowTemperature,
@@ -72,6 +86,40 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
             ivThirddayCondition;
     private Button btnRefreshWeather;
 
+    
+    private MyHandler myHandler = null;
+    private MyApplication myApplication = null;
+
+    public class MyHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case QUERY_SUCCEED:
+                    Toast.makeText(WeatherActivity.this, "service test ok", Toast.LENGTH_SHORT).show();
+                    showWeather();
+                    break;
+                case GET_INFO_FAIL:
+                    Toast.makeText(WeatherActivity.this, "get info fail", Toast.LENGTH_SHORT).show();
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    /*ServiceConnection connection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            Messenger messenger = new Messenger(mHandler);
+
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+    };*/
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,6 +129,8 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.activity_weather);
 
         selectCity = (RelativeLayout) findViewById(R.id.select_city);
+        btnAQI = (RelativeLayout) findViewById(R.id.btn_aqi);
+
         tvCityName = (TextView) findViewById(R.id.tv_city_name);
         tvPublishTime = (TextView) findViewById(R.id.tv_publish_time);
         tvNowTemperature = (TextView) findViewById(R.id.tv_now_tmp);
@@ -114,18 +164,28 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         ivThirddayCondition = (ImageView) findViewById(R.id.iv_thirdday_cond);
         btnRefreshWeather = (Button) findViewById(R.id.btn_refresh_weather);
 
+        myHandler = new MyHandler();
+        myApplication = (MyApplication) getApplication();
+        myApplication.setHandler(myHandler);
+
+
         String countyCode = getIntent().getStringExtra("county_code");
+        Toast.makeText(myApplication, countyCode, Toast.LENGTH_SHORT).show();
         if (!TextUtils.isEmpty(countyCode)) {
             tvPublishTime.setText("同步中...");
             /*todayInfoLayout.setVisibility(View.INVISIBLE);
             forecastInfoLayout.setVisibility(View.INVISIBLE);*/
             tvCityName.setVisibility(View.INVISIBLE);
-            queryWeatherCode(countyCode);
+            QueryUtility.queryWeatherCode(countyCode, myHandler);
+
+
         } else {
             showWeather();
+
         }
         selectCity.setOnClickListener(this);
         btnRefreshWeather.setOnClickListener(this);
+        btnAQI.setOnClickListener(this);
     }
 
     @Override
@@ -142,15 +202,23 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
                 String weatherCode = prefs.getString("city_id", "");
                 if (!TextUtils.isEmpty(weatherCode)) {
-                    queryWeatherInfo(weatherCode);
+                    QueryUtility.queryWeatherInfo(weatherCode, myHandler);
                 }
+                break;
+            case R.id.btn_aqi:
+                SharedPreferences prefs2 = PreferenceManager.getDefaultSharedPreferences(this);
+                String weatherCode2 = prefs2.getString("city_id", "");
+                Intent intent2 = new Intent(this, AQIActivity.class);
+                intent2.putExtra("weatherCode", weatherCode2);
+                startActivity(intent2);
+                finish();
                 break;
             default:
                 break;
         }
     }
 
-    private void queryWeatherCode(String countyCode) {
+    /*private void queryWeatherCode(String countyCode ) {
         String address = "http://www.weather.com.cn/data/list3/city" + countyCode + ".xml";
         queryFromServer(address, "countyCode");
     }
@@ -173,7 +241,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                         }
                     }
                 } else if ("weatherInfo".equals(type)) {
-                    Utility.handleWeatherResponse(WeatherActivity.this, response);
+                    Utility.handleWeatherResponse(WeatherActivity.this, response, mHandler);
 
                 }runOnUiThread(new Runnable() {
                     @Override
@@ -193,12 +261,12 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 });
             }
         });
-    }
+    }*/
 
-    public void showWeather() {
+    private void showWeather() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         tvCityName.setText(prefs.getString("city_name", "0"));
-        tvPublishTime.setText(prefs.getString("publish_time", "0") + "发布");
+        tvPublishTime.setText("" + System.currentTimeMillis());
         tvNowTemperature.setText(prefs.getString("now_tmp", "0"));
         ivNowCondition.setImageResource(getResources().getIdentifier("icon" + prefs.getString("now_code", ""), "drawable", getPackageName()));
         tvNowCondition.setText(prefs.getString("now_cond", "0"));
@@ -233,7 +301,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         forecastInfoLayout.setVisibility(View.VISIBLE);*/
 
         tvCityName.setVisibility(View.VISIBLE);
-        Intent intent = new Intent(this, AutoUpdateService.class);
-        startService(intent);
+
     }
 }
