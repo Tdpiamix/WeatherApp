@@ -1,45 +1,29 @@
 package com.example.weatherapp.activity;
 
-import android.app.Service;
-import android.content.ComponentName;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.IBinder;
 import android.os.Message;
-import android.os.Messenger;
 import android.preference.PreferenceManager;
-import android.provider.ContactsContract;
-import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.Window;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.weatherapp.R;
 import com.example.weatherapp.service.AutoUpdateService;
-import com.example.weatherapp.util.HttpCallbackListener;
-import com.example.weatherapp.util.HttpUtil;
 import com.example.weatherapp.util.MyApplication;
 import com.example.weatherapp.util.QueryUtility;
-import com.example.weatherapp.util.Utility;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
-
-import org.w3c.dom.Text;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
+import java.util.Calendar;
+import static com.example.weatherapp.util.QueryUtility.queryAQIInfo;
 
 /**
  * Created by Lian on 2017/2/4.
@@ -49,9 +33,13 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
 
     public static final String APIKey = "d4ff76f262dd43c09e327baad5f95fbd";
     private static final int GET_INFO_FAIL = 0;
-    private static final int QUERY_SUCCEED = 1;
+    private static final int WEATHER_SUCCEED = 1;
+    private LinearLayout bgLayout;
     private RelativeLayout selectCity,
             btnAQI;
+
+    private PullToRefreshScrollView pullToRefreshScrollView;
+    private ScrollView scrollView;
             ;
     private TextView tvCityName,
             tvPublishTime,
@@ -84,9 +72,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
             iv10PmCondition,
             ivTomorrowCondition,
             ivThirddayCondition;
-    private Button btnRefreshWeather;
 
-    
     private MyHandler myHandler = null;
     private MyApplication myApplication = null;
 
@@ -94,8 +80,8 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case QUERY_SUCCEED:
-                    Toast.makeText(WeatherActivity.this, "service test ok", Toast.LENGTH_SHORT).show();
+                case WEATHER_SUCCEED:
+                    /*Toast.makeText(WeatherActivity.this, "service test ok", Toast.LENGTH_SHORT).show();*/
                     showWeather();
                     break;
                 case GET_INFO_FAIL:
@@ -107,19 +93,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
-    /*ServiceConnection connection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            Messenger messenger = new Messenger(mHandler);
-
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-
-        }
-    };*/
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -128,9 +101,10 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         }
         setContentView(R.layout.activity_weather);
 
+        bgLayout = (LinearLayout) findViewById(R.id.bg_layout);
         selectCity = (RelativeLayout) findViewById(R.id.select_city);
         btnAQI = (RelativeLayout) findViewById(R.id.btn_aqi);
-
+        pullToRefreshScrollView = (PullToRefreshScrollView) findViewById(R.id.pull_refresh_scrollview);
         tvCityName = (TextView) findViewById(R.id.tv_city_name);
         tvPublishTime = (TextView) findViewById(R.id.tv_publish_time);
         tvNowTemperature = (TextView) findViewById(R.id.tv_now_tmp);
@@ -162,30 +136,61 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         iv10PmCondition = (ImageView) findViewById(R.id.iv_10pm_cond);
         ivTomorrowCondition = (ImageView) findViewById(R.id.iv_tomorrow_cond);
         ivThirddayCondition = (ImageView) findViewById(R.id.iv_thirdday_cond);
-        btnRefreshWeather = (Button) findViewById(R.id.btn_refresh_weather);
 
         myHandler = new MyHandler();
         myApplication = (MyApplication) getApplication();
         myApplication.setHandler(myHandler);
 
-
         String countyCode = getIntent().getStringExtra("county_code");
-        Toast.makeText(myApplication, countyCode, Toast.LENGTH_SHORT).show();
+
         if (!TextUtils.isEmpty(countyCode)) {
             tvPublishTime.setText("同步中...");
             /*todayInfoLayout.setVisibility(View.INVISIBLE);
             forecastInfoLayout.setVisibility(View.INVISIBLE);*/
+            Toast.makeText(myApplication, countyCode, Toast.LENGTH_SHORT).show();
             tvCityName.setVisibility(View.INVISIBLE);
             QueryUtility.queryWeatherCode(countyCode, myHandler);
-
-
+            Intent intent = new Intent(this, AutoUpdateService.class);
+            startService(intent);
         } else {
             showWeather();
-
+            Intent intent = new Intent(this, AutoUpdateService.class);
+            startService(intent);
         }
         selectCity.setOnClickListener(this);
-        btnRefreshWeather.setOnClickListener(this);
         btnAQI.setOnClickListener(this);
+        pullToRefreshScrollView.getLoadingLayoutProxy().setPullLabel("下拉刷新");
+        pullToRefreshScrollView.getLoadingLayoutProxy().setReleaseLabel("释放刷新");
+        pullToRefreshScrollView.getLoadingLayoutProxy().setRefreshingLabel("正在刷新...");
+        pullToRefreshScrollView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ScrollView>() {
+            @Override
+            public void onRefresh(PullToRefreshBase<ScrollView> refreshView) {
+                new GetDataTask().execute();
+            }
+        });
+        scrollView = pullToRefreshScrollView.getRefreshableView();
+    }
+
+    private class GetDataTask extends AsyncTask<Void, Void, String[]> {
+        @Override
+        protected String[] doInBackground(Void... params) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+            }
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MyApplication.getContext());
+            String weatherCode = prefs.getString("city_id", "");
+            if (!TextUtils.isEmpty(weatherCode)) {
+                QueryUtility.queryWeatherInfo(weatherCode, myHandler);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String[] result) {
+            pullToRefreshScrollView.onRefreshComplete();
+            super.onPostExecute(result);
+        }
     }
 
     @Override
@@ -197,19 +202,11 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 startActivity(intent);
                 finish();
                 break;
-            case R.id.btn_refresh_weather:
-                tvPublishTime.setText("同步中...");
+            case R.id.btn_aqi:
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
                 String weatherCode = prefs.getString("city_id", "");
-                if (!TextUtils.isEmpty(weatherCode)) {
-                    QueryUtility.queryWeatherInfo(weatherCode, myHandler);
-                }
-                break;
-            case R.id.btn_aqi:
-                SharedPreferences prefs2 = PreferenceManager.getDefaultSharedPreferences(this);
-                String weatherCode2 = prefs2.getString("city_id", "");
+                queryAQIInfo(weatherCode, myHandler);
                 Intent intent2 = new Intent(this, AQIActivity.class);
-                intent2.putExtra("weatherCode", weatherCode2);
                 startActivity(intent2);
                 finish();
                 break;
@@ -218,53 +215,15 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
-    /*private void queryWeatherCode(String countyCode ) {
-        String address = "http://www.weather.com.cn/data/list3/city" + countyCode + ".xml";
-        queryFromServer(address, "countyCode");
-    }
-
-    private void queryWeatherInfo(String weatherCode) {
-        String address = "https://free-api.heweather.com/v5/weather?city=" + weatherCode + "&key=" + APIKey;
-        queryFromServer(address, "weatherInfo");
-    }
-
-    private void queryFromServer(final String address, final String type) {
-        HttpUtil.sendHttpRequest(address, new HttpCallbackListener() {
-            @Override
-            public void onFinish(final String response) {
-                if ("countyCode".equals(type)) {
-                    if (!TextUtils.isEmpty(response)) {
-                        String[] array = response.split("\\|");
-                        if (array != null && array.length == 2) {
-                            String weatherCode = "CN" + array[1];
-                            queryWeatherInfo(weatherCode);
-                        }
-                    }
-                } else if ("weatherInfo".equals(type)) {
-                    Utility.handleWeatherResponse(WeatherActivity.this, response, mHandler);
-
-                }runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        showWeather();
-                    }
-                });
-            }
-
-            @Override
-            public void onError(Exception e) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        tvPublishTime.setText("同步失败");
-                    }
-                });
-            }
-        });
-    }*/
-
     private void showWeather() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        Calendar calendar = Calendar.getInstance();
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        if (hour >= 18) {
+            bgLayout.setBackgroundResource(R.drawable.bg_night);
+        } else {
+            bgLayout.setBackgroundResource(R.drawable.bg_day);
+        }
         tvCityName.setText(prefs.getString("city_name", "0"));
         tvPublishTime.setText("" + System.currentTimeMillis());
         tvNowTemperature.setText(prefs.getString("now_tmp", "0"));
@@ -273,21 +232,21 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         tvAQI.setText("空气质量 " + prefs.getString("qlty", "0") + " " + prefs.getString("aqi", "0"));
         tvTodayDate.setText(prefs.getString("today_date", "0"));
         tvTodayTemperature.setText(prefs.getString("today_tmp_high", "0") + "° / " + prefs.getString("today_tmp_low", "0") + "°");
-        tv10Am.setText(prefs.getString("0", "0"));
-        tv1Pm.setText(prefs.getString("1", "0"));
-        tv4Pm.setText(prefs.getString("2", "0"));
-        tv7Pm.setText(prefs.getString("3", "0"));
-        tv10Pm.setText(prefs.getString("4", "0"));
+        tv10Am.setText(prefs.getString("0", ""));
+        tv1Pm.setText(prefs.getString("1", ""));
+        tv4Pm.setText(prefs.getString("2", ""));
+        tv7Pm.setText(prefs.getString("3", ""));
+        tv10Pm.setText(prefs.getString("4", ""));
         iv10AmCondition.setImageResource(getResources().getIdentifier("icon" + prefs.getString("0_code", ""), "drawable", getPackageName()));
         iv1PmCondition.setImageResource(getResources().getIdentifier("icon" + prefs.getString("1_code", ""), "drawable", getPackageName()));
         iv4PmCondition.setImageResource(getResources().getIdentifier("icon" + prefs.getString("2_code", ""), "drawable", getPackageName()));
         iv7PmCondition.setImageResource(getResources().getIdentifier("icon" + prefs.getString("3_code", ""), "drawable", getPackageName()));
         iv10PmCondition.setImageResource(getResources().getIdentifier("icon" + prefs.getString("4_code", ""), "drawable", getPackageName()));
-        tv10AmTemperature.setText(prefs.getString("0_tmp", "0") + "°");
-        tv1PmTemperature.setText(prefs.getString("1_tmp", "0") + "°");
-        tv4PmTemperature.setText(prefs.getString("2_tmp", "0") + "°");
-        tv7PmTemperature.setText(prefs.getString("3_tmp", "0") + "°");
-        tv10PmTemperature.setText(prefs.getString("4_tmp", "0") + "°");
+        tv10AmTemperature.setText(prefs.getString("0_tmp", ""));
+        tv1PmTemperature.setText(prefs.getString("1_tmp", ""));
+        tv4PmTemperature.setText(prefs.getString("2_tmp", ""));
+        tv7PmTemperature.setText(prefs.getString("3_tmp", ""));
+        tv10PmTemperature.setText(prefs.getString("4_tmp", ""));
         tvTomorrowDate.setText(prefs.getString("fcst_date_1", ""));
         ivTomorrowCondition.setImageResource(getResources().getIdentifier("icon" + prefs.getString("code_1", ""), "drawable", getPackageName()));
         tvTomorrowTemperatureHigh.setText(prefs.getString("tmp_high_1", "0") + "°");
@@ -296,11 +255,8 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         ivThirddayCondition.setImageResource(getResources().getIdentifier("icon" + prefs.getString("code_2", ""), "drawable", getPackageName()));
         tvThirddayTemperatureHigh.setText(prefs.getString("tmp_high_2", "0") + "°");
         tvThirddayTemperatureLow.setText(prefs.getString("tmp_low_2", "0") + "°");
-
         /*todayInfoLayout.setVisibility(View.VISIBLE);
         forecastInfoLayout.setVisibility(View.VISIBLE);*/
-
         tvCityName.setVisibility(View.VISIBLE);
-
     }
 }

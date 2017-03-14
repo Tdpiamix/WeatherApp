@@ -2,33 +2,22 @@ package com.example.weatherapp.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
-import android.util.Log;
-
 import com.example.weatherapp.model.City;
 import com.example.weatherapp.model.County;
 import com.example.weatherapp.model.Province;
 import com.example.weatherapp.model.WeatherDB;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Dictionary;
 import java.util.GregorianCalendar;
-import java.util.List;
 import java.util.Locale;
-
-import static android.R.attr.data;
 
 /**
  * Created by Lian on 2017/1/31.
@@ -36,7 +25,7 @@ import static android.R.attr.data;
 
 public class Utility {
 
-    private static final int QUERY_SUCCEED = 1;
+    private static final int WEATHER_SUCCEED = 1;
 
     public synchronized static boolean handleProvincesResponse(WeatherDB weatherDB, String response) {
         String[] allProvinces = response.split(",");
@@ -106,6 +95,7 @@ public class Utility {
 
             editor.putString("so2", aqiInfo.getString("so2"));
             editor.commit();
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -124,11 +114,7 @@ public class Utility {
             JSONObject aqiInfo = weatherInfo.getJSONObject("aqi").getJSONObject("city");
             editor.putString("aqi", aqiInfo.getString("aqi"));
 
-
-
-
             editor.putString("qlty", aqiInfo.getString("qlty"));
-
             editor.putString("city_name", weatherInfo.getJSONObject("basic").getString("city"));
             editor.putString("city_id", weatherInfo.getJSONObject("basic").getString("id"));
             editor.putString("publish_time", weatherInfo.getJSONObject("basic").getJSONObject("update").getString("loc"));
@@ -146,30 +132,30 @@ public class Utility {
                 editor.putString("tmp_low_" + i, dailyInfo.getJSONObject(i).getJSONObject("tmp").getString("min"));
             }
 
-
-
             JSONArray hourlyInfo = weatherInfo.getJSONArray("hourly_forecast");
-            for (int i = 0; i < 1; i++) {
-                editor.putString(i + "_code", hourlyInfo.getJSONObject(i).getJSONObject("cond").getString("code"));
-                String date = hourlyInfo.getJSONObject(i).getString("date");
-                String[] array = date.split(" ");
-                editor.putString(i + "", array[1]);
-                editor.putString(i + "_tmp", hourlyInfo.getJSONObject(i).getString("tmp"));
+            for (int i = 0; i < 5; i++) {
+                try {
+                    editor.putString(i + "_code", hourlyInfo.getJSONObject(i).getJSONObject("cond").getString("code"));
+                    String date = hourlyInfo.getJSONObject(i).getString("date");
+                    String[] array = date.split(" ");
+                    editor.putString(i + "", array[1]);
+                    editor.putString(i + "_tmp", hourlyInfo.getJSONObject(i).getString("tmp") + "°");
+                } catch (JSONException e) {
+                    editor.putString(i + "_code", "");
+                    editor.putString(i + "", "");
+                    editor.putString(i + "_tmp", "");
+                }
             }
-
-
 
             JSONObject nowInfo = weatherInfo.getJSONObject("now");
             editor.putString("now_cond", nowInfo.getJSONObject("cond").getString("txt"));
             editor.putString("now_code", nowInfo.getJSONObject("cond").getString("code"));
             editor.putString("now_tmp", nowInfo.getString("tmp"));
-
             editor.putBoolean("city_selected", true);
-
             editor.commit();
 
             Message message = new Message();
-            message.what = QUERY_SUCCEED;
+            message.what = WEATHER_SUCCEED;
             mHandler.sendMessage(message);
 
         } catch (JSONException e) {

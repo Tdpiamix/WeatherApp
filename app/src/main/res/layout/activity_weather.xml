@@ -1,374 +1,402 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/bg_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="16dp"
-    android:orientation="vertical">
-
-    <!--
+    android:layout_height="match_parent">
+    
     <com.handmark.pulltorefresh.library.PullToRefreshScrollView
         xmlns:ptr="http://schemas.android.com/apk/res-auto"
         android:id="@+id/pull_refresh_scrollview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="none"
         ptr:ptrAnimationStyle="flip"
-        ptr:ptrMode="both">
+        ptr:ptrMode="pullFromStart"
+        ptr:ptrHeaderTextColor="#FFFFFF">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="16dp"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/select_city"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tv_city_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="北京"
+                    android:textColor="#FFFFFF"
+                    android:textSize="28dp" />
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@id/tv_city_name"
+                    android:padding="4dp"
+                    android:src="@drawable/arrow_down" />
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/tv_publish_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textSize="14sp"
+                android:text="14:00发布"
+                android:textColor="#FFFFFF"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.example.weatherapp.util.MyTextView
+                    android:id="@+id/tv_now_tmp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:paddingTop="4dp"
+                    android:textSize="120sp"
+                    android:text="18"
+                    android:textColor="#FFFFFF"/>
+
+                <com.example.weatherapp.util.MyTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/tv_now_tmp"
+                    android:layout_alignTop="@+id/tv_now_tmp"
+                    android:paddingTop="32dp"
+                    android:textSize="72sp"
+                    android:text="°"
+                    android:textColor="#FFFFFF"/>
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/iv_now_cond"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/home"/>
+
+                <TextView
+                    android:id="@+id/tv_now_cond"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="12dp"
+                    android:textSize="18sp"
+                    android:text="晴"
+                    android:textColor="#FFFFFF"/>
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/btn_aqi"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="6dp">
+
+                <TextView
+                    android:id="@+id/tv_aqi"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:text="空气质量 良 63"
+                    android:textColor="#FFFFFF"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/tv_aqi"
+                    android:layout_alignBottom="@id/tv_aqi"
+                    android:layout_alignTop="@id/tv_aqi"
+                    android:src="@drawable/arrow_right"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp">
+
+                <TextView
+                    android:id="@+id/tv_today_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="8dp"
+                    android:textSize="16sp"
+                    android:text="星期二"
+                    android:textColor="#FFFFFF"/>
+
+                <TextView
+                    android:id="@+id/tv_today_tmp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:paddingRight="8dp"
+                    android:textSize="16sp"
+                    android:text="22 / 13"
+                    android:textColor="#FFFFFF"/>
+            </RelativeLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginTop="8dp"
+                android:src="#FFFFFF"/>
+
+
+
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp">
+
+                <TextView
+                    android:id="@+id/tv_10am"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="上午10时"
+                    android:textColor="#FFFFFF"/>
+
+                <TextView
+                    android:id="@+id/tv_1pm"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="下午1时"
+                    android:textColor="#FFFFFF"/>
+
+                <TextView
+                    android:id="@+id/tv_4pm"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="下午4时"
+                    android:textColor="#FFFFFF"/>
+
+                <TextView
+                    android:id="@+id/tv_7pm"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="下午7时"
+                    android:textColor="#FFFFFF"/>
+
+                <TextView
+                    android:id="@+id/tv_10pm"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="下午10时"
+                    android:textColor="#FFFFFF"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/iv_10am_cond"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/home"/>
+
+                <ImageView
+                    android:id="@+id/iv_1pm_cond"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/home"/>
+
+                <ImageView
+                    android:id="@+id/iv_4pm_cond"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/home"/>
+
+                <ImageView
+                    android:id="@+id/iv_7pm_cond"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/home"/>
+
+                <ImageView
+                    android:id="@+id/iv_10pm_cond"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/home"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="6dp"
+                >
+
+                <TextView
+                    android:id="@+id/tv_10am_tmp"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="21°"
+                    android:textColor="#FFFFFF"/>
+
+                <TextView
+                    android:id="@+id/tv_1pm_tmp"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="23°"
+                    android:textColor="#FFFFFF"/>
+
+                <TextView
+                    android:id="@+id/tv_4pm_tmp"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="20°"
+                    android:textColor="#FFFFFF"/>
+
+                <TextView
+                    android:id="@+id/tv_7pm_tmp"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="18°"
+                    android:textColor="#FFFFFF"/>
+
+                <TextView
+                    android:id="@+id/tv_10pm_tmp"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="18°"
+                    android:textColor="#FFFFFF"/>
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginTop="8dp"
+                android:src="#FFFFFF"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingTop="6dp">
+
+                <TextView
+                    android:id="@+id/tv_tomorrow_date"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5"
+                    android:paddingLeft="16dp"
+                    android:textSize="18sp"
+                    android:text="明天"
+                    android:textColor="#FFFFFF"/>
+
+                <ImageView
+                    android:id="@+id/iv_tomorrow_cond"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="6"
+                    android:src="@drawable/home"/>
+
+                <TextView
+                    android:id="@+id/tv_tomorrow_tmp_high"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:gravity="center_horizontal"
+                    android:textSize="18sp"
+                    android:text="22°"
+                    android:textColor="#FFFFFF"/>
+
+                <TextView
+                    android:id="@+id/tv_tomorrow_tmp_low"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:gravity="center_horizontal"
+                    android:textSize="18sp"
+                    android:text="16°"
+                    android:textColor="#FFFFFF"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingTop="6dp">
+
+                <TextView
+                    android:id="@+id/tv_thirdday_date"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5"
+                    android:paddingLeft="16dp"
+                    android:textSize="18sp"
+                    android:text="后天"
+                    android:textColor="#FFFFFF"/>
+
+                <ImageView
+                    android:id="@+id/iv_thirdday_cond"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="6"
+                    android:src="@drawable/home"/>
+
+                <TextView
+                    android:id="@+id/tv_thirdday_tmp_high"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:gravity="center_horizontal"
+                    android:textSize="18sp"
+                    android:text="22°"
+                    android:textColor="#FFFFFF"/>
+
+                <TextView
+                    android:id="@+id/tv_thirdday_tmp_low"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:gravity="center_horizontal"
+                    android:textSize="18sp"
+                    android:text="16°"
+                    android:textColor="#FFFFFF"/>
+            </LinearLayout>
+        </LinearLayout>
     </com.handmark.pulltorefresh.library.PullToRefreshScrollView>
-    -->
-    <RelativeLayout
-        android:id="@+id/select_city"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/tv_city_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:textSize="28dp"
-            android:text="北京"/>
 
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_toRightOf="@id/tv_city_name"
-            android:layout_centerVertical="true"
-            android:padding="4dp"
-            android:src="@drawable/arrow_down"/>
-
-        <Button
-            android:id="@+id/btn_refresh_weather"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"
-            android:background="@drawable/refresh" />
-    </RelativeLayout>
-
-    <TextView
-        android:id="@+id/tv_publish_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:textSize="14sp"
-        android:text="14:00发布"/>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:id="@+id/tv_now_tmp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:paddingTop="24dp"
-            android:textSize="120sp"
-            android:text="18"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/tv_now_tmp"
-            android:layout_alignTop="@+id/tv_now_tmp"
-            android:paddingTop="32dp"
-            android:textSize="72sp"
-            android:text="°"/>
-    </RelativeLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center">
-
-        <ImageView
-            android:id="@+id/iv_now_cond"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:src="@drawable/home"/>
-
-        <TextView
-            android:id="@+id/tv_now_cond"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="12dp"
-            android:textSize="18sp"
-            android:text="晴"/>
-    </LinearLayout>
-
-    <RelativeLayout
-        android:id="@+id/btn_aqi"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="6dp">
-
-        <TextView
-            android:id="@+id/tv_aqi"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:text="空气质量 良 63"/>
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/tv_aqi"
-            android:layout_alignBottom="@id/tv_aqi"
-            android:layout_alignTop="@id/tv_aqi"
-            android:src="@drawable/arrow_right"/>
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="28dp">
-
-        <TextView
-            android:id="@+id/tv_today_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="8dp"
-            android:textSize="16sp"
-            android:text="星期二"/>
-
-        <TextView
-            android:id="@+id/tv_today_tmp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:paddingRight="8dp"
-            android:textSize="16sp"
-            android:text="22 / 13"/>
-    </RelativeLayout>
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:layout_marginTop="8dp"
-        android:src="#666666"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="8dp">
-
-        <TextView
-            android:id="@+id/tv_10am"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center_horizontal"
-            android:text="上午10时"/>
-
-        <TextView
-            android:id="@+id/tv_1pm"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center_horizontal"
-            android:text="下午1时"/>
-
-        <TextView
-            android:id="@+id/tv_4pm"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center_horizontal"
-            android:text="下午4时"/>
-
-        <TextView
-            android:id="@+id/tv_7pm"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center_horizontal"
-            android:text="下午7时"/>
-
-        <TextView
-            android:id="@+id/tv_10pm"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center_horizontal"
-            android:text="下午10时"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <ImageView
-            android:id="@+id/iv_10am_cond"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_weight="1"
-            android:src="@drawable/home"/>
-
-        <ImageView
-            android:id="@+id/iv_1pm_cond"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_weight="1"
-            android:src="@drawable/home"/>
-
-        <ImageView
-            android:id="@+id/iv_4pm_cond"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_weight="1"
-            android:src="@drawable/home"/>
-
-        <ImageView
-            android:id="@+id/iv_7pm_cond"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_weight="1"
-            android:src="@drawable/home"/>
-
-        <ImageView
-            android:id="@+id/iv_10pm_cond"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_weight="1"
-            android:src="@drawable/home"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="6dp"
-        >
-
-        <TextView
-            android:id="@+id/tv_10am_tmp"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center_horizontal"
-            android:text="21°"/>
-
-        <TextView
-            android:id="@+id/tv_1pm_tmp"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center_horizontal"
-            android:text="23°"/>
-
-        <TextView
-            android:id="@+id/tv_4pm_tmp"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center_horizontal"
-            android:text="20°"/>
-
-        <TextView
-            android:id="@+id/tv_7pm_tmp"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center_horizontal"
-            android:text="18°"/>
-
-        <TextView
-            android:id="@+id/tv_10pm_tmp"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center_horizontal"
-            android:text="18°"/>
-    </LinearLayout>
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:layout_marginTop="8dp"
-        android:src="#666666"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:paddingTop="6dp">
-
-        <TextView
-            android:id="@+id/tv_tomorrow_date"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="5"
-            android:paddingLeft="16dp"
-            android:textSize="18sp"
-            android:text="明天"/>
-
-        <ImageView
-            android:id="@+id/iv_tomorrow_cond"
-            android:layout_width="0dp"
-            android:layout_height="30dp"
-            android:layout_weight="6"
-            android:src="@drawable/home"/>
-
-        <TextView
-            android:id="@+id/tv_tomorrow_tmp_high"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:gravity="center_horizontal"
-            android:textSize="18sp"
-            android:text="22°"/>
-
-        <TextView
-            android:id="@+id/tv_tomorrow_tmp_low"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:gravity="center_horizontal"
-            android:textSize="18sp"
-            android:text="16°"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:paddingTop="6dp">
-
-        <TextView
-            android:id="@+id/tv_thirdday_date"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="5"
-            android:paddingLeft="16dp"
-            android:textSize="18sp"
-            android:text="后天"/>
-
-        <ImageView
-            android:id="@+id/iv_thirdday_cond"
-            android:layout_width="0dp"
-            android:layout_height="30dp"
-            android:layout_weight="6"
-            android:src="@drawable/home"/>
-
-        <TextView
-            android:id="@+id/tv_thirdday_tmp_high"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:gravity="center_horizontal"
-            android:textSize="18sp"
-            android:text="22°"/>
-
-        <TextView
-            android:id="@+id/tv_thirdday_tmp_low"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:gravity="center_horizontal"
-            android:textSize="18sp"
-            android:text="16°"/>
-    </LinearLayout>
 
 
 

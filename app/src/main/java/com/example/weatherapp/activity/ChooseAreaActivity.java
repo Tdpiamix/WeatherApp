@@ -7,15 +7,12 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.weatherapp.R;
 import com.example.weatherapp.model.City;
 import com.example.weatherapp.model.County;
@@ -24,7 +21,6 @@ import com.example.weatherapp.model.WeatherDB;
 import com.example.weatherapp.util.HttpCallbackListener;
 import com.example.weatherapp.util.HttpUtil;
 import com.example.weatherapp.util.Utility;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,7 +61,7 @@ public class ChooseAreaActivity extends AppCompatActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }
-        setContentView(R.layout.choose_area);
+        setContentView(R.layout.activity_area);
         listView = (ListView) findViewById(R.id.list_view);
         titleText = (TextView) findViewById(R.id.title_text);
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, dataList);

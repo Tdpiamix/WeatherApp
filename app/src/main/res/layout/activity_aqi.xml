@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/bg_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -10,12 +11,13 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:text="空气质量"
-        android:textSize="14sp"/>
+        android:textSize="14sp"
+        android:textColor="#FFFFFF"/>
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:src="#666666"
+        android:src="#FFFFFF"
         android:layout_marginTop="8dp"/>
 
     <RelativeLayout
@@ -29,7 +31,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:text="PM10"
-            android:textSize="20sp"/>
+            android:textSize="20sp"
+            android:textColor="#FFFFFF"/>
 
         <TextView
             android:id="@+id/tv_pm10"
@@ -37,15 +40,16 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:text="139μg/m3"
-            android:textSize="20sp"/>
+            android:textSize="20sp"
+            android:textColor="#FFFFFF"/>
     </RelativeLayout>
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:src="#666666"
-        android:paddingLeft="36dp"
-        android:paddingRight="32dp"/>
+        android:src="#FFFFFF"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -58,7 +62,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:text="PM25"
-            android:textSize="20sp"/>
+            android:textSize="20sp"
+            android:textColor="#FFFFFF"/>
 
         <TextView
             android:id="@+id/tv_pm25"
@@ -66,15 +71,16 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:text="61μg/m3"
-            android:textSize="20sp"/>
+            android:textSize="20sp"
+            android:textColor="#FFFFFF"/>
     </RelativeLayout>
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:src="#666666"
-        android:paddingLeft="36dp"
-        android:paddingRight="32dp"/>
+        android:src="#FFFFFF"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -87,7 +93,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:text="NO2"
-            android:textSize="20sp"/>
+            android:textSize="20sp"
+            android:textColor="#FFFFFF"/>
 
         <TextView
             android:id="@+id/tv_no2"
@@ -95,15 +102,16 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:text="93μg/m3"
-            android:textSize="20sp"/>
+            android:textSize="20sp"
+            android:textColor="#FFFFFF"/>
     </RelativeLayout>
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:src="#666666"
-        android:paddingLeft="36dp"
-        android:paddingRight="32dp"/>
+        android:src="#FFFFFF"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -116,7 +124,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:text="SO2"
-            android:textSize="20sp"/>
+            android:textSize="20sp"
+            android:textColor="#FFFFFF"/>
 
         <TextView
             android:id="@+id/tv_so2"
@@ -124,15 +133,16 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:text="24μg/m3"
-            android:textSize="20sp"/>
+            android:textSize="20sp"
+            android:textColor="#FFFFFF"/>
     </RelativeLayout>
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:src="#666666"
-        android:paddingLeft="36dp"
-        android:paddingRight="32dp"/>
+        android:src="#FFFFFF"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -145,7 +155,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:text="O3"
-            android:textSize="20sp"/>
+            android:textSize="20sp"
+            android:textColor="#FFFFFF"/>
 
         <TextView
             android:id="@+id/tv_o3"
@@ -153,15 +164,16 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:text="51μg/m3"
-            android:textSize="20sp"/>
+            android:textSize="20sp"
+            android:textColor="#FFFFFF"/>
     </RelativeLayout>
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:src="#666666"
-        android:paddingLeft="36dp"
-        android:paddingRight="32dp"/>
+        android:src="#FFFFFF"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -174,7 +186,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:text="CO"
-            android:textSize="20sp"/>
+            android:textSize="20sp"
+            android:textColor="#FFFFFF"/>
 
         <TextView
             android:id="@+id/tv_co"
@@ -182,13 +195,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:text="0.68μg/m3"
-            android:textSize="20sp"/>
+            android:textSize="20sp"
+            android:textColor="#FFFFFF"/>
     </RelativeLayout>
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:src="#666666"
-        android:paddingLeft="36dp"
-        android:paddingRight="32dp"/>
+
 </LinearLayout>

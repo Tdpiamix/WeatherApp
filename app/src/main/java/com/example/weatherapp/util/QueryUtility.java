@@ -3,10 +3,6 @@ package com.example.weatherapp.util;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
-import android.widget.Toast;
-
-import com.example.weatherapp.activity.WeatherActivity;
-
 import static com.example.weatherapp.activity.WeatherActivity.APIKey;
 
 /**
