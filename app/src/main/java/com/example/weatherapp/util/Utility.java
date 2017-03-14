@@ -113,7 +113,11 @@ public class Utility {
             JSONObject weatherInfo = jsonArray.getJSONObject(0);
             JSONObject aqiInfo = weatherInfo.getJSONObject("aqi").getJSONObject("city");
             editor.putString("aqi", aqiInfo.getString("aqi"));
-
+            editor.putString("co", aqiInfo.getString("co"));
+            editor.putString("no2", aqiInfo.getString("no2"));
+            editor.putString("o3", aqiInfo.getString("o3"));
+            editor.putString("pm10", aqiInfo.getString("pm10"));
+            editor.putString("pm25", aqiInfo.getString("pm25"));
             editor.putString("qlty", aqiInfo.getString("qlty"));
             editor.putString("city_name", weatherInfo.getJSONObject("basic").getString("city"));
             editor.putString("city_id", weatherInfo.getJSONObject("basic").getString("id"));

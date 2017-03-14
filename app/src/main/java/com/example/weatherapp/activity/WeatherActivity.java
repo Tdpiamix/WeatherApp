@@ -24,6 +24,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import java.util.Calendar;
 import static com.example.weatherapp.util.QueryUtility.queryAQIInfo;
+import static com.example.weatherapp.util.QueryUtility.queryWeatherInfo;
 
 /**
  * Created by Lian on 2017/2/4.
@@ -147,7 +148,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
             tvPublishTime.setText("同步中...");
             /*todayInfoLayout.setVisibility(View.INVISIBLE);
             forecastInfoLayout.setVisibility(View.INVISIBLE);*/
-            Toast.makeText(myApplication, countyCode, Toast.LENGTH_SHORT).show();
             tvCityName.setVisibility(View.INVISIBLE);
             QueryUtility.queryWeatherCode(countyCode, myHandler);
             Intent intent = new Intent(this, AutoUpdateService.class);
@@ -181,7 +181,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MyApplication.getContext());
             String weatherCode = prefs.getString("city_id", "");
             if (!TextUtils.isEmpty(weatherCode)) {
-                QueryUtility.queryWeatherInfo(weatherCode, myHandler);
+                queryWeatherInfo(weatherCode, myHandler);
             }
             return null;
         }
@@ -205,7 +205,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.btn_aqi:
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
                 String weatherCode = prefs.getString("city_id", "");
-                queryAQIInfo(weatherCode, myHandler);
+                queryWeatherInfo(weatherCode, myHandler);
                 Intent intent2 = new Intent(this, AQIActivity.class);
                 startActivity(intent2);
                 finish();
@@ -219,7 +219,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         Calendar calendar = Calendar.getInstance();
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
-        if (hour >= 18) {
+        if (hour >= 19) {
             bgLayout.setBackgroundResource(R.drawable.bg_night);
         } else {
             bgLayout.setBackgroundResource(R.drawable.bg_day);

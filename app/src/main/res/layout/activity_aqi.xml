@@ -39,7 +39,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:text="139μg/m3"
             android:textSize="20sp"
             android:textColor="#FFFFFF"/>
     </RelativeLayout>
@@ -70,7 +69,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:text="61μg/m3"
             android:textSize="20sp"
             android:textColor="#FFFFFF"/>
     </RelativeLayout>
@@ -101,7 +99,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:text="93μg/m3"
             android:textSize="20sp"
             android:textColor="#FFFFFF"/>
     </RelativeLayout>
@@ -132,7 +129,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:text="24μg/m3"
             android:textSize="20sp"
             android:textColor="#FFFFFF"/>
     </RelativeLayout>
@@ -163,7 +159,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:text="51μg/m3"
             android:textSize="20sp"
             android:textColor="#FFFFFF"/>
     </RelativeLayout>
@@ -194,7 +189,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:text="0.68μg/m3"
             android:textSize="20sp"
             android:textColor="#FFFFFF"/>
     </RelativeLayout>

@@ -45,7 +45,7 @@ public class AQIActivity extends AppCompatActivity {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         Calendar calendar = Calendar.getInstance();
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
-        if (hour >= 18) {
+        if (hour >= 19) {
             bgLayout.setBackgroundResource(R.drawable.bg_night);
         } else {
             bgLayout.setBackgroundResource(R.drawable.bg_day);
